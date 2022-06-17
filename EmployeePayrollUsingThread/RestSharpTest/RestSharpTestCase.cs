@@ -51,9 +51,27 @@ namespace RestSharpTest
 
         }
 
-        
+        [TestMethod]
+        public void givenEmployee_OnPost_ShouldReturnAddedEmployee()
+        {
+            //arrange
+            RestRequest request = new RestRequest("/Employee", Method.Post);
+            JObject jobjectbody = new JObject();
+            jobjectbody.Add("Name", "Nitesh");
+            jobjectbody.Add("Salary", "22000");
+
+            request.AddParameter("application/json", jobjectbody, ParameterType.RequestBody);
+
+            //act
+            RestResponse response = client.Execute(request);
+            //assert
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
+            Employee dataResponse = JsonConvert.DeserializeObject<Employee>(response.Content);
+            Assert.AreEqual("Nitesh", dataResponse.Name);
+            Assert.AreEqual("22000", dataResponse.Salary);
+            System.Console.WriteLine(response.Content);
+        }
+
 
     }
-
-   
 }
